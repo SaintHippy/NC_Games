@@ -17,9 +17,15 @@ describe("GET /api/categories", () => {
       .get("/api/categories")
       .expect(200)
       .then((response) => {
-        console.log("response :", response.body);
-        expect(response.body).toContain(Array);
-        expect(response.body.categories).toHaveLength(4);
+        expect(response.body.categories.length > 0);
+        response.body.categories.forEach((category) => {
+          expect(category).toEqual(
+            expect.objectContaining({
+              slug: expect.any(String),
+              description: expect.any(String),
+            })
+          );
+        });
       });
   });
 });
