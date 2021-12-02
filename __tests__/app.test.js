@@ -12,7 +12,7 @@ afterAll(() => {
 });
 
 describe.skip("GET /api", () => {
-  test("should respond with JSON object containing message key", () => {
+  test("should respond with JSON object containing all available endpoints", () => {
     return request(app)
       .get("/api")
       .expect(200)

@@ -1,0 +1,5 @@
+//////////////HELP ME OBI SAM KENOBI. YOU'RE MY ONLY HOPE\\\\\\\\\\\\\\\\\\\\\\\ 
+
+1) cannot get / when starting app *heroku master??
+2) where do I put my method for get/api? do I need an api controller? if so does everything route through that?
+3) select by id in models. It's a bit* jumbled up/completely incorrect
