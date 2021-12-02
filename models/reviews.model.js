@@ -1,31 +1,27 @@
 const db = require("../db/connection");
-const reviews = require("../db/data/test-data/reviews");
 
 exports.selectReviews = () => {
+  console.log("In selectReviews");
   return db.query(`SELECT * FROM reviews`).then((reviews) => {
     return reviews.rows;
   });
 };
 
-exports.selectReviewsById = (review_id) => {
-  return db.query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id]).then((review) => {
-    console.log({ review: review });
-    if (typeof review_id != Number) {
-      return Promise.reject({
-        status: 404,
-        msg: "Bad ID",
+exports.selectReviewById = (review_id) => {
+  console.log("in selectById");
+  if (typeof review_id != Number) {
+    return Promise.reject({
+      status: 404,
+      msg: "Bad ID",
+    });
+  } else {
+    return db
+      .query(
+        `SELECT reviews.owner, reviews.title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, COUNT(comments.review_id = reviews.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id LEFT JOIN users ON reviews.owner = users.username WHERE reviews.reviews_id = $1`,
+        [review_id]
+      )
+      .then((review) => {
+        return review.rows[0];
       });
-    } else {
-      //check the length of the comments
-      return db.query(`SELECT * FROM comments WHERE review_id = $1`, [review_id]).then((comments) => {
-        review.rows.comment_count = comments.length; //refator for obj. Counter?
-        return review.rows;
-      });
-    }
-  });
+  }
 };
-
-// exports.patchReview = (review_id, newVotes) => {
-//   return db.query(`
-//   UPDATE reviews `);
-// };

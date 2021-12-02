@@ -1,8 +1,8 @@
 const request = require("supertest");
 const app = require("../app");
 const db = require("../db/connection.js");
-const testData = require("../db/data/test-data/index.js");
 const seed = require("../seed");
+const testData = require("../db/data/test-data/index.js");
 
 beforeEach(() => {
   return seed(testData);
@@ -42,11 +42,11 @@ describe("GET /api/categories", () => {
 });
 
 describe("GET /api/reviews/:review_id", () => {
-  it("STATUS 200, returns a labelled array containing specific review data", () => {
+  it.skip("STATUS 200, returns a labelled array containing specific review data", () => {
     return (
       request(app)
         // .get("/api/reviews/2") This isn't a query, you muppet!
-        .get("/api/reviews/?review_id=2")
+        .get("/api/reviews?review_id=2")
         .expect(200)
         .then((response) => {
           expect(response.body.reviews.length > 0);
@@ -69,5 +69,13 @@ describe("GET /api/reviews/:review_id", () => {
           });
         })
     );
+  });
+  it("STATUS 404. returns 404 error when passed an invalid id", () => {
+    return request(app)
+      .get("/api/reviews?review_id=hambone")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad ID");
+      });
   });
 });
