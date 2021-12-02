@@ -18,7 +18,7 @@ exports.selectReviewsById = (review_id) => {
       console.log("!!!!!!!!!!!!!HERE!!!!!!!!!!");
       //check the length of the comments
       return db.query(`SELECT * FROM comments WHERE review_id = $1`, [review_id]).then((comments) => {
-        review.rows.comment_count = comments.length;
+        review.rows.comment_count = comments.length; //refator for obj. Counter?
         // console.log(review.rows);
         return review.rows;
       });
