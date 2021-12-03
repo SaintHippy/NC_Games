@@ -170,12 +170,30 @@ describe("PATCH /api/reviews/:review_id", () => {
   });
 });
 
-describe("GET /api/reviews/:review_id/comments", () => {
+describe.only("GET /api/reviews/:review_id/comments", () => {
   test("STATUS 200. responds with an array of comments for the given review_id", () => {
     const review_id = 2;
     return request(app)
       .get(`/api/reviews/${review_id}/comments`)
       .expect(200)
-      .then((response) => {});
+      .then((response) => {
+        const comments = response.body.comments;
+        expect(comments).toEqual(
+          expect.objectContaining({
+            author: expect.any(String),
+            body: expect.any(String),
+            comment_id: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
+      });
+  });
+});
+
+describe.only("DELETE /api/comments/:comment_id", () => {
+  test("STATUS 204. should delete the given comment ", () => {
+    const comment_id = 2;
+    return request(app).delete(`/api/comments/${comment_id}`).expect(204);
   });
 });
