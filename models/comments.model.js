@@ -29,7 +29,15 @@ exports.removeCommentById = (comment_id) => {
 };
 
 exports.addReviewComment = (comment, review_id) => {
-  //need logic for finding highest review_id. dbquery first? Can't remember and it's 4:30pm
+  const {body}
   console.log("in add comment");
-  return db.query(`INSERT INTO comments`);
+  return db
+    .query(
+      `INSERT INTO comments (body, author, votes, review_id, created_at)
+  VALUES ($1, $2, $3, $4, $5);`,
+      [body, author, votes, review_id, created_at]
+    )
+    .then((newComment) => {
+      return newComment;
+    });
 };
