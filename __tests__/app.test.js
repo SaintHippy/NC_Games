@@ -197,3 +197,9 @@ describe.only("DELETE /api/comments/:comment_id", () => {
     return request(app).delete(`/api/comments/${comment_id}`).expect(204);
   });
 });
+
+describe("POST /api/reviews/:review_id/comments", () => {
+  test("STATUS 201. post a new comment to review & respond with the posted comment", () => {
+    return request(app).post(`/api/reviews/${review_id}/comments`);
+  });
+});
