@@ -1,9 +1,11 @@
 const express = require("express");
-const { getReviews, getReviewById } = require("../controllers/reviews.controller");
+const commentsRouter = require("../routers/comments.router");
+const { getReviews, getReviewById, patchVotesBy } = require("../controllers/reviews.controller");
 
-const reviewsRouter = express.Router(); //THIS FUCKING LINE!!!
+const reviewsRouter = express.Router();
 
+reviewsRouter.route("/:review_id").get(getReviewById).patch(patchVotesBy);
 reviewsRouter.route("/").get(getReviews);
-reviewsRouter.route(":reviews_id").get(getReviewById);
+reviewsRouter.route("/:review_id/comments", commentsRouter);
 
 module.exports = reviewsRouter;

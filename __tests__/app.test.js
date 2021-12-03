@@ -41,12 +41,12 @@ describe("GET /api/categories", () => {
   });
 });
 
-describe("GET /api/reviews/:review_id", () => {
-  it.skip("STATUS 200, returns a labelled array containing specific review data", () => {
+describe("GET /api/reviews", () => {
+  it("STATUS 200, returns a labelled array containing specific review data", () => {
     return (
       request(app)
         // .get("/api/reviews/2") This isn't a query, you muppet!
-        .get("/api/reviews?review_id=2")
+        .get("/api/reviews")
         .expect(200)
         .then((response) => {
           expect(response.body.reviews.length > 0);
@@ -57,25 +57,125 @@ describe("GET /api/reviews/:review_id", () => {
                 owner: expect.any(String),
                 title: expect.any(String),
                 review_id: expect.any(Number),
-                review_body: expect.any(String),
                 designer: expect.any(String),
                 review_img_url: expect.any(String),
                 category: expect.any(String),
                 created_at: expect.any(String),
                 votes: expect.any(Number),
-                comment_count: expect.any(Number), //oh yeah!! D'oh
+                comment_count: expect.any(String), //oh yeah!! D'oh
               })
             );
           });
         })
     );
   });
-  it("STATUS 404. returns 404 error when passed an invalid id", () => {
+});
+
+describe("GET /api/reviews/review_id", () => {
+  it("STATUS 200, returns a labelled array containing specific review data", () => {
+    const review_id = 2;
+    return (
+      request(app)
+        // .get("/api/reviews/2") This isn't a query, you muppet!
+        .get(`/api/reviews/${review_id}`)
+        .expect(200)
+        .then((response) => {
+          const review = response.body.review;
+          expect(review).toEqual(
+            expect.objectContaining({
+              //comment out each expect. Uncomment one by one until issue discovered
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              review_body: expect.any(String),
+              designer: expect.any(String),
+              review_img_url: expect.any(String),
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number), //oh yeah!! D'oh
+            })
+          );
+        })
+    );
+  });
+  test("STATUS 404 returns on invalid input", () => {
+    const review_id = 123446655;
     return request(app)
-      .get("/api/reviews?review_id=hambone")
+      .get(`/api/reviews/${review_id}`)
       .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("Bad ID");
+        const msg = response.body.msg;
+        expect(msg).toBe("review not found");
       });
+  });
+  test("STATUS 400 returns on bad input", () => {
+    const review_id = "hammock";
+    return request(app)
+      .get(`/api/reviews/${review_id}`)
+      .expect(400)
+      .then((response) => {
+        const msg = response.body.msg;
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("PATCH /api/reviews/:review_id", () => {
+  it("STATUS 200. updates votes by specified amount", () => {
+    const body = { inc_votes: 5 };
+    const review_id = 2;
+    return request(app)
+      .patch(`/api/reviews/${review_id}`)
+      .send(body)
+      .expect(200)
+      .then((response) => {
+        const review = response.body.review;
+        expect(review).toEqual(
+          expect.objectContaining({
+            //comment out each expect. Uncomment one by one until issue discovered
+            owner: expect.any(String),
+            title: expect.any(String),
+            review_id: expect.any(Number),
+            review_body: expect.any(String),
+            designer: expect.any(String),
+            review_img_url: expect.any(String),
+            category: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(Number), //oh yeah!! D'oh
+          })
+        );
+      });
+  });
+  test("STATUS 404 returns on invalid input", () => {
+    const review_id = 123446655;
+    return request(app)
+      .get(`/api/reviews/${review_id}`)
+      .expect(404)
+      .then((response) => {
+        const msg = response.body.msg;
+        expect(msg).toBe("review not found");
+      });
+  });
+  test("STATUS 400 returns on bad input", () => {
+    const review_id = "hammock";
+    return request(app)
+      .get(`/api/reviews/${review_id}`)
+      .expect(400)
+      .then((response) => {
+        const msg = response.body.msg;
+        expect(msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("GET /api/reviews/:review_id/comments", () => {
+  test("STATUS 200. responds with an array of comments for the given review_id", () => {
+    const review_id = 2;
+    return request(app)
+      .get(`/api/reviews/${review_id}/comments`)
+      .expect(200)
+      .then((response) => {});
   });
 });
