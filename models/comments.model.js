@@ -1,8 +1,8 @@
 const db = require("../db/connection");
 
 exports.selectCommentsByReview = (review_id) => {
-  console.log("in select comments");
-  console.log(review_id);
+  // console.log("in select comments");
+  // console.log(review_id);
   return db
     .query(
       `
@@ -28,9 +28,9 @@ exports.removeCommentById = (comment_id) => {
   });
 };
 
-exports.addReviewComment = (comment, review_id) => {
+exports.patchCommentById = ( review_id,body,author) => {
   const {body}
-  console.log("in add comment");
+
   return db
     .query(
       `INSERT INTO comments (body, author, votes, review_id, created_at)
@@ -41,3 +41,4 @@ exports.addReviewComment = (comment, review_id) => {
       return newComment;
     });
 };
+

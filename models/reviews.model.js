@@ -38,33 +38,35 @@ exports.selectReviewById = (review_id) => {
     });
 };
 
-exports.updateVotesBy = (incVotes, review_id) => {
-  console.log("inUpdateVotesBy");
+exports.updateReviewById = (incVotes, review_id) => {
+  console.log("inUpdateReviewsById");
   // console.log({ incVotes });
   // console.log({ review_id });
-  return db
-    .query(
-      `UPDATE reviews 
+  return (
+    db
+      .query(
+        `UPDATE reviews 
       SET votes = votes + $1 
-      WHERE reviews.review_id =$2;`,
-      [incVotes, review_id]
-    )
-    .then(() => {
-      return db.query(
-        `SELECT reviews.owner, reviews.review_body, reviews.designer, reviews.title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, 
-        COUNT(comments.review_id = reviews.review_id) :: INT 
-        AS comment_count
-        FROM reviews 
-        LEFT JOIN comments ON reviews.review_id = comments.review_id 
-        WHERE reviews.review_id = $1
-        GROUP BY reviews.review_id;`,
-        [review_id]
-      );
-    })
-    .then((review) => {
-      if (!review.rows[0]) {
-        return Promise.reject({ status: 404, msg: "review not found" });
-      }
-      return review.rows[0];
-    });
+      WHERE reviews.review_id =$2 RETURNING *;`,
+        [incVotes, review_id]
+      )
+      // .then(() => {
+      //   return db.query(
+      //     `SELECT reviews.owner, reviews.review_body, reviews.designer, reviews.title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes,
+      //     COUNT(comments.review_id = reviews.review_id) :: INT
+      //     AS comment_count
+      //     FROM reviews
+      //     LEFT JOIN comments ON reviews.review_id = comments.review_id
+      //     WHERE reviews.review_id = $1
+      //     GROUP BY reviews.review_id;`,
+      //     [review_id]
+      //   );
+      // })
+      .then((review) => {
+        if (!review.rows[0]) {
+          return Promise.reject({ status: 404, msg: `review: ${review_id} not found` });
+        }
+        return review.rows[0];
+      })
+  );
 };

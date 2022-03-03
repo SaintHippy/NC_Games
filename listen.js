@@ -4,7 +4,7 @@ const { PORT = 9090 } = process.env;
 
 app.listen(PORT, (err) => {
   if (err) {
-    throw new Error("nope");
+    throw new Error("Error");
   }
   console.log(`Listening on port ${PORT}...`);
 });
