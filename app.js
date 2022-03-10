@@ -1,8 +1,10 @@
 const express = require("express");
+const cors = require("cors");
 const { handleCustomErrors, handlePsqlErrors, handleServerErrors } = require("./errors/errors"); //send errors off for someone else to sort out
 const apiRouter = require("./routers/api.router");
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/api", apiRouter); //everything will go through this to keep app nice and clean

@@ -11,7 +11,7 @@ afterAll(() => {
   return db.end();
 });
 
-describe.skip("GET /api", () => {
+describe("GET /api", () => {
   test("should respond with JSON object containing all available endpoints", () => {
     return request(app)
       .get("/api")
@@ -143,7 +143,6 @@ describe("PATCH /api/reviews/:review_id", () => {
             category: expect.any(String),
             created_at: expect.any(String),
             votes: expect.any(Number),
-            comment_count: expect.any(Number), //oh yeah!! D'oh
           })
         );
       });
@@ -170,7 +169,7 @@ describe("PATCH /api/reviews/:review_id", () => {
   });
 });
 
-describe.only("GET /api/reviews/:review_id/comments", () => {
+describe.skip("GET /api/reviews/:review_id/comments", () => {
   test("STATUS 200. responds with an array of comments for the given review_id", () => {
     const review_id = 2;
     return request(app)
@@ -178,7 +177,7 @@ describe.only("GET /api/reviews/:review_id/comments", () => {
       .expect(200)
       .then((response) => {
         const comments = response.body.comments;
-        expect(comments).toEqual(
+        expect(comments).toBe(
           expect.objectContaining({
             author: expect.any(String),
             body: expect.any(String),
@@ -191,15 +190,17 @@ describe.only("GET /api/reviews/:review_id/comments", () => {
   });
 });
 
-describe.only("DELETE /api/comments/:comment_id", () => {
+describe("DELETE /api/comments/:comment_id", () => {
   test("STATUS 204. should delete the given comment ", () => {
-    const comment_id = 2;
+    const comment_id = 1;
     return request(app).delete(`/api/comments/${comment_id}`).expect(204);
   });
 });
 
 describe("POST /api/reviews/:review_id/comments", () => {
   test("STATUS 201. post a new comment to review & respond with the posted comment", () => {
-    return request(app).post(`/api/reviews/${review_id}/comments`);
+    const review_id = 1;
+    const postedComment = { body: "new comment posted", username: "mallionaire" };
+    return request(app).post(`/api/reviews/${review_id}/comments`).send(postedComment).expect(201);
   });
 });
