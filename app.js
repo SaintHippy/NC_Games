@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { handleCustomErrors, handlePsqlErrors, handleServerErrors } = require("./errors/errors"); //send errors off for someone else to sort out
+const { handleCustomErrors, handlePsqlErrors, handleServerErrors, invalidRoute } = require("./errors/errors"); //send errors off for someone else to sort out
 const apiRouter = require("./routers/api.router");
 const app = express();
 
@@ -8,6 +8,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api", apiRouter); //everything will go through this to keep app nice and clean
+
+app.all("/*", invalidRoute); //catch all for invailid path
 
 app.use(handleCustomErrors); //first error check
 app.use(handlePsqlErrors); //next error check
