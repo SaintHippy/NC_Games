@@ -188,19 +188,23 @@ describe.only("GET /api/reviews/:review_id/comments", () => {
         );
       });
   });
-});
-
-describe("DELETE /api/comments/:comment_id", () => {
-  test("STATUS 204. should delete the given comment ", () => {
-    const comment_id = 1;
-    return request(app).delete(`/api/comments/${comment_id}`).expect(204);
+  test("STATUS 400. ", () => {
+    const review_id = 9999;
+    return request(app).get(`/api/reviews/${review_id}/comments`).expect(404);
   });
-});
 
-describe("POST /api/reviews/:review_id/comments", () => {
-  test("STATUS 201. post a new comment to review & respond with the posted comment", () => {
-    const review_id = 1;
-    const postedComment = { body: "new comment posted", username: "mallionaire" };
-    return request(app).post(`/api/reviews/${review_id}/comments`).send(postedComment).expect(201);
+  describe("DELETE /api/comments/:comment_id", () => {
+    test("STATUS 204. should delete the given comment ", () => {
+      const comment_id = 1;
+      return request(app).delete(`/api/comments/${comment_id}`).expect(204);
+    });
+  });
+
+  describe("POST /api/reviews/:review_id/comments", () => {
+    test("STATUS 201. post a new comment to review & respond with the posted comment", () => {
+      const review_id = 1;
+      const postedComment = { body: "new comment posted", username: "mallionaire" };
+      return request(app).post(`/api/reviews/${review_id}/comments`).send(postedComment).expect(201);
+    });
   });
 });

@@ -1,10 +1,10 @@
 const format = require("pg-format");
 const db = require("../db/connection");
 
-exports.checkExists = async (table, column, query) => {
+exports.checkExists = (table, column, query) => {
   if (!query) return true;
   const queryStr = format("SELECT * FROM %s WHERE %s = $1;", table, column);
-  const rowCount = await db.query(queryStr, [query]).then((result) => result.rowCount);
+  const rowCount = db.query(queryStr, [query]).then((result) => result.rowCount);
 
   if (!rowCount) {
     const notFound = table[0].toUpperCase() + table.slice(1, -1);

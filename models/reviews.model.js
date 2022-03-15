@@ -39,9 +39,6 @@ exports.selectReviewById = (review_id) => {
 };
 
 exports.updateReviewById = (incVotes, review_id) => {
-  console.log("inUpdateReviewsById");
-  // console.log({ incVotes });
-  // console.log({ review_id });
   return (
     db
       .query(

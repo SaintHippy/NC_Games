@@ -19,8 +19,6 @@ exports.selectCommentById = (comment_id) => {
 };
 
 exports.selectCommentsByReview = (review_id) => {
-  // console.log("in select comments");
-  // console.log(review_id);
   return db
     .query(
       `
