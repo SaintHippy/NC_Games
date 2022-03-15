@@ -17,7 +17,7 @@ describe("GET /api", () => {
       .get("/api")
       .expect(200)
       .then((result) => {
-        expect(result.body).toEqual(expect.objectContaining({ message: expect.any(String) }));
+        expect(result.body).toEqual({ msg: expect.any(Object) });
       });
   });
 });
@@ -169,7 +169,7 @@ describe("PATCH /api/reviews/:review_id", () => {
   });
 });
 
-describe.skip("GET /api/reviews/:review_id/comments", () => {
+describe.only("GET /api/reviews/:review_id/comments", () => {
   test("STATUS 200. responds with an array of comments for the given review_id", () => {
     const review_id = 2;
     return request(app)
@@ -177,15 +177,15 @@ describe.skip("GET /api/reviews/:review_id/comments", () => {
       .expect(200)
       .then((response) => {
         const comments = response.body.comments;
-        expect(comments).toBe(
+        expect(comments).toBe([
           expect.objectContaining({
             author: expect.any(String),
             body: expect.any(String),
-            comment_id: expect.any(String),
+            comment_id: expect.any(Number),
             created_at: expect.any(String),
             votes: expect.any(Number),
-          })
-        );
+          }),
+        ]);
       });
   });
 });
