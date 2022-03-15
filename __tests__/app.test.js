@@ -133,7 +133,6 @@ describe("PATCH /api/reviews/:review_id", () => {
         const review = response.body.review;
         expect(review).toEqual(
           expect.objectContaining({
-            //comment out each expect. Uncomment one by one until issue discovered
             owner: expect.any(String),
             title: expect.any(String),
             review_id: expect.any(Number),

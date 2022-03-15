@@ -6,7 +6,7 @@ const reviewsRouter = require("./reviews.router");
 const commentsRouter = require("./comments.router");
 // const usersRouter  = require("./user.router");
 
-apiRouter.route("/").get((req, res) => res.send({ msg: endpoints }));
+apiRouter.route("/").get((req, res) => res.send({ msg: JSON.stringify(JSON.parse(endpoints)) }));
 apiRouter.use("/categories", categoriesRouter);
 apiRouter.use("/reviews", reviewsRouter);
 apiRouter.use("/comments", commentsRouter);
