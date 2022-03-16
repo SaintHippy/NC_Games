@@ -3,6 +3,6 @@ const { deleteCommentById, patchCommentById, getCommentById } = require("../cont
 
 const commentsRouter = express.Router();
 
-commentsRouter.route("/:comment_id").delete(deleteCommentById).patch(patchCommentById).get(getCommentById);
+commentsRouter.route("/:comment_id").delete(deleteCommentById).patch(patchCommentById);
 
 module.exports = commentsRouter;

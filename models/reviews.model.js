@@ -12,6 +12,9 @@ exports.selectReviews = () => {
       GROUP BY reviews.review_id;`
     )
     .then((reviews) => {
+      if (!reviews.rows[0]) {
+        return Promise.reject({ status: 404, msg: "review not found" });
+      }
       return reviews.rows;
     });
 };

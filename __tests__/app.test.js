@@ -71,7 +71,7 @@ describe("GET /api/reviews", () => {
   });
 });
 
-describe("GET /api/reviews/review_id", () => {
+describe.only("GET /api/reviews/review_id", () => {
   it("STATUS 200, returns a labelled array containing specific review data", () => {
     const review_id = 2;
     return (
@@ -83,7 +83,6 @@ describe("GET /api/reviews/review_id", () => {
           const review = response.body.review;
           expect(review).toEqual(
             expect.objectContaining({
-              //comment out each expect. Uncomment one by one until issue discovered
               owner: expect.any(String),
               title: expect.any(String),
               review_id: expect.any(Number),
@@ -176,15 +175,18 @@ describe.only("GET /api/reviews/:review_id/comments", () => {
       .expect(200)
       .then((response) => {
         const comments = response.body.comments;
-        expect(comments).toEqual(
-          expect.objectContaining({
-            // author: expect.any(String),
-            // body: expect.any(String),
-            // comment_id: expect.any(Number),
-            // created_at: expect.any(String),
-            // votes: expect.any(Number),
-          })
-        );
+        expect(comments.length > 0);
+        comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              body: expect.any(String),
+              comment_id: expect.any(Number),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+            })
+          );
+        });
       });
   });
   test("STATUS 400. ", () => {

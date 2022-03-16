@@ -1,26 +1,15 @@
 const {
   selectCommentsByReview,
-  selectCommentById,
   removeCommentById,
   updateCommentById,
   insertComment,
 } = require("../models/comments.model");
 
 exports.getCommentsByReview = (req, res, next) => {
-  // console.log("in getComments");
   const { review_id } = req.params;
   selectCommentsByReview(review_id)
     .then((comments) => {
       res.status(200).send({ comments });
-    })
-    .catch(next);
-};
-
-exports.getCommentById = (req, res, next) => {
-  const { comment_id } = req.params;
-  selectCommentById(comment_id)
-    .then((comment) => {
-      res.status(200).send({ comment });
     })
     .catch(next);
 };
@@ -35,7 +24,6 @@ exports.deleteCommentById = (req, res, next) => {
 };
 
 exports.postComment = (req, res, next) => {
-  // console.log("posting...");
   const { review_id } = req.params;
   const { username: author, body } = req.body;
   insertComment({ review_id, author, body })

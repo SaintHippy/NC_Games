@@ -1,23 +1,5 @@
 const db = require("../db/connection");
 
-exports.selectCommentById = (comment_id) => {
-  return db
-    .query(
-      ` SELECT body, comments.votes, author, comment_id, comments.created_at  
-  FROM comments
-  LEFT JOIN reviews ON comments.review_id = reviews.review_id
-  WHERE comments.comment_id = $1
-  GROUP BY comments.review_id, comments.votes, comments.body, comments.created_at, comments.author, comments.comment_id;`,
-      [comment_id]
-    )
-    .then((comments) => {
-      if (!comments.rows[0]) {
-        return Promise.reject({ status: 404, msg: "review not found" });
-      }
-      return comments.rows;
-    });
-};
-
 exports.selectCommentsByReview = (review_id) => {
   return db
     .query(
