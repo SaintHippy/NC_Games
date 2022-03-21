@@ -41,6 +41,26 @@ exports.selectReviewById = (review_id) => {
     });
 };
 
+exports.selectReviewsByCategory = (category) => {
+  return db
+    .query(
+      `SELECT reviews.owner, reviews.review_body, reviews.designer, reviews.title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, 
+    COUNT(comments.review_id = reviews.review_id) :: INT 
+    AS comment_count
+    FROM reviews 
+    LEFT JOIN comments ON reviews.review_id = comments.review_id 
+    WHERE reviews.category = $1
+    GROUP BY reviews.review_id;`,
+      [category]
+    )
+    .then((review) => {
+      if (!review.rows[0]) {
+        return Promise.reject({ status: 404, msg: "no reviews found" });
+      }
+      return review.rows[0];
+    });
+};
+
 exports.updateReviewById = (incVotes, review_id) => {
   return (
     db

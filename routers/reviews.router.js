@@ -1,6 +1,11 @@
 const express = require("express");
 
-const { getReviews, getReviewById, patchReviewById } = require("../controllers/reviews.controller");
+const {
+  getReviews,
+  getReviewById,
+
+  patchReviewById,
+} = require("../controllers/reviews.controller");
 const { getCommentsByReview, postComment } = require("../controllers/comments.controller");
 
 const reviewsRouter = express.Router();
