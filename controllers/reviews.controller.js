@@ -32,9 +32,9 @@ exports.getReviewByCategory = (req, res, next) => {
 };
 
 exports.patchReviewById = (req, res, next) => {
-  const { inc_votes } = req.body;
   const { review_id } = req.params;
-  updateReviewById(inc_votes, review_id)
+  const { num } = req.body;
+  updateReviewById(review_id, votes)
     .then((review) => {
       res.status(200).send({ review });
     })
