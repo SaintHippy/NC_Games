@@ -1,8 +1,8 @@
 const { selectReviews, selectReviewById, updateReviewById } = require("../models/reviews.model");
 
 exports.getReviews = (req, res, next) => {
-  const { sort_by } = req.params;
-  selectReviews(sort_by)
+  const { sort_by, order, category } = req.query;
+  selectReviews(sort_by, order, category)
     .then((reviews) => {
       res.status(200).send({ reviews });
     })

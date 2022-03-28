@@ -69,35 +69,43 @@ describe("GET /api/reviews", () => {
         })
     );
   });
+  test("200: returned array sorted by query, returns in descending date order by default", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.reviews).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
 });
 
-describe.only("GET /api/reviews/review_id", () => {
-  it("STATUS 200, returns a labelled array containing specific review data", () => {
+describe("GET /api/reviews/review_id", () => {
+  test("STATUS 200, returns a labelled array containing specific review data", () => {
     const review_id = 2;
-    return (
-      request(app)
-        // .get("/api/reviews/2") This isn't a query, you muppet!
-        .get(`/api/reviews/${review_id}`)
-        .expect(200)
-        .then((response) => {
-          const review = response.body.review;
-          expect(review).toEqual(
-            expect.objectContaining({
-              owner: expect.any(String),
-              title: expect.any(String),
-              review_id: expect.any(Number),
-              review_body: expect.any(String),
-              designer: expect.any(String),
-              review_img_url: expect.any(String),
-              category: expect.any(String),
-              created_at: expect.any(String),
-              votes: expect.any(Number),
-              comment_count: expect.any(Number), //oh yeah!! D'oh
-            })
-          );
-        })
-    );
+    return request(app)
+      .get(`/api/reviews/${review_id}`)
+      .expect(200)
+      .then((response) => {
+        const review = response.body.review;
+        expect(review).toEqual(
+          expect.objectContaining({
+            owner: expect.any(String),
+            title: expect.any(String),
+            review_id: expect.any(Number),
+            review_body: expect.any(String),
+            designer: expect.any(String),
+            review_img_url: expect.any(String),
+            category: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(Number),
+          })
+        );
+      });
   });
+
   test("STATUS 404 returns on invalid input", () => {
     const review_id = 123446655;
     return request(app)
@@ -121,25 +129,16 @@ describe.only("GET /api/reviews/review_id", () => {
 });
 
 describe("PATCH /api/reviews/:review_id", () => {
-  it("STATUS 200. updates votes by specified amount", () => {
-    const body = { inc_votes: 5 };
-    const review_id = 2;
+  test.only("STATUS 200. updates votes by specified amount", () => {
+    const body = { inc_votes: 1 };
     return request(app)
-      .patch(`/api/reviews/${review_id}`)
+      .patch(`/api/reviews/1`)
       .send(body)
       .expect(200)
       .then((response) => {
         const review = response.body.review;
         expect(review).toEqual(
           expect.objectContaining({
-            owner: expect.any(String),
-            title: expect.any(String),
-            review_id: expect.any(Number),
-            review_body: expect.any(String),
-            designer: expect.any(String),
-            review_img_url: expect.any(String),
-            category: expect.any(String),
-            created_at: expect.any(String),
             votes: expect.any(Number),
           })
         );
@@ -167,7 +166,7 @@ describe("PATCH /api/reviews/:review_id", () => {
   });
 });
 
-describe.only("GET /api/reviews/:review_id/comments", () => {
+describe("GET /api/reviews/:review_id/comments", () => {
   test("STATUS 200. responds with an array of comments for the given review_id", () => {
     const review_id = 2;
     return request(app)
