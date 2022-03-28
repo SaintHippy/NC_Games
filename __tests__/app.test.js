@@ -57,7 +57,7 @@ describe("GET /api/reviews", () => {
                 owner: expect.any(String),
                 title: expect.any(String),
                 review_id: expect.any(Number),
-                designer: expect.any(String),
+                owner: expect.any(String),
                 review_img_url: expect.any(String),
                 category: expect.any(String),
                 created_at: expect.any(String),
@@ -75,6 +75,17 @@ describe("GET /api/reviews", () => {
       .expect(200)
       .then((result) => {
         expect(result.body.reviews).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+
+  test("200: returned array sorted by query, returns in order of query", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=comment_count")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.reviews).toBeSortedBy("comment_count", {
           descending: true,
         });
       });
@@ -129,11 +140,9 @@ describe("GET /api/reviews/review_id", () => {
 });
 
 describe("PATCH /api/reviews/:review_id", () => {
-  test.only("STATUS 200. updates votes by specified amount", () => {
-    const body = { inc_votes: 1 };
+  test("STATUS 200. updates votes by 1", () => {
     return request(app)
       .patch(`/api/reviews/1`)
-      .send(body)
       .expect(200)
       .then((response) => {
         const review = response.body.review;

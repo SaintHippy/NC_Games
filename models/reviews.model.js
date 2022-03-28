@@ -20,7 +20,7 @@ const db = require("../db/connection");
 //     });
 // };
 
-exports.selectReviews = (sort_by = "reviews.votes", category) => {
+exports.selectReviews = (sort_by = "reviews.created_at", order = "DESC", category) => {
   if (
     ![
       "owner",
@@ -45,7 +45,7 @@ exports.selectReviews = (sort_by = "reviews.votes", category) => {
         LEFT JOIN comments ON reviews.review_id = comments.review_id 
         LEFT JOIN users ON reviews.owner = users.username WHERE category = '${category}' 
         GROUP BY reviews.review_id 
-        ORDER BY ${sort_by};  `
+        ORDER BY ${sort_by} ${order};  `
       )
       .then((response) => {
         if (response.rows.length === 0) {
@@ -114,13 +114,13 @@ exports.selectReviewsByCategory = (category) => {
     });
 };
 
-exports.updateReviewById = (review_id, incVotes) => {
+exports.updateReviewById = (review_id) => {
   return db
     .query(
       `UPDATE reviews 
-      SET votes = votes + $1 
-      WHERE reviews.review_id =$2 RETURNING *;`,
-      [incVotes, review_id]
+      SET votes = votes + 1 
+      WHERE reviews.review_id =$1 RETURNING *;`,
+      [review_id]
     )
     .then(() => {
       return db.query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id]);
