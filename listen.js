@@ -6,5 +6,5 @@ app.listen(PORT, (err) => {
   if (err) {
     throw new Error("Error");
   }
-  console.log(`Listening on port ${PORT}...`);
+  
 });

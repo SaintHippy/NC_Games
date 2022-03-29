@@ -1,7 +1,6 @@
 const { selectUsers, selectUserByUsername } = require("../models/users.model");
 
 exports.getUsers = (req, res, next) => {
-  console.log("in getUser controller");
   selectUsers()
     .then((users) => {
       res.status(200).send({ users });
@@ -10,7 +9,6 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.getUserByUsername = (req, res, next) => {
-  console.log("in getUserByUsername controller");
   const { username } = req.params;
   selectUserByUsername(username)
     .then((user) => {

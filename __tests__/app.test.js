@@ -43,31 +43,27 @@ describe("GET /api/categories", () => {
 
 describe("GET /api/reviews", () => {
   it("STATUS 200, returns a labelled array containing specific review data", () => {
-    return (
-      request(app)
-        // .get("/api/reviews/2") This isn't a query, you muppet!
-        .get("/api/reviews")
-        .expect(200)
-        .then((response) => {
-          expect(response.body.reviews.length > 0);
-          response.body.reviews.forEach((review) => {
-            expect(review).toEqual(
-              expect.objectContaining({
-                //comment out each expect. Uncomment one by one until issue discovered
-                owner: expect.any(String),
-                title: expect.any(String),
-                review_id: expect.any(Number),
-                owner: expect.any(String),
-                review_img_url: expect.any(String),
-                category: expect.any(String),
-                created_at: expect.any(String),
-                votes: expect.any(Number),
-                comment_count: expect.any(String), //oh yeah!! D'oh
-              })
-            );
-          });
-        })
-    );
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.reviews.length > 0);
+        response.body.reviews.forEach((review) => {
+          expect(review).toEqual(
+            expect.objectContaining({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              owner: expect.any(String),
+              review_img_url: expect.any(String),
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(String), //oh yeah!! D'oh
+            })
+          );
+        });
+      });
   });
   test("200: returned array sorted by query, returns in descending date order by default", () => {
     return request(app)

@@ -1,25 +1,5 @@
 const db = require("../db/connection");
 
-// exports.selectReviews = () => {
-//   // console.log("In selectReviews");
-//   sort_by = "reviews.created_at";
-//   return db
-//     .query(
-//       `SELECT owner, designer, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes,
-//       COUNT(comments.review_id = reviews.review_id) AS comment_count
-//       FROM reviews
-//       LEFT JOIN comments ON reviews.review_id = comments.review_id
-//       LEFT JOIN users ON reviews.owner = users.username
-//       GROUP BY reviews.review_id;`
-//     )
-//     .then((reviews) => {
-//       if (!reviews.rows[0]) {
-//         return Promise.reject({ status: 404, msg: "review not found" });
-//       }
-//       return reviews.rows;
-//     });
-// };
-
 exports.selectReviews = (sort_by = "reviews.created_at", order = "DESC", category) => {
   if (
     ![
@@ -73,8 +53,6 @@ exports.selectReviews = (sort_by = "reviews.created_at", order = "DESC", categor
 };
 
 exports.selectReviewById = (review_id) => {
-  // console.log("In selectReviewById");
-
   return db
     .query(
       `SELECT reviews.owner, reviews.review_body, reviews.designer, reviews.title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, 
@@ -114,13 +92,13 @@ exports.selectReviewsByCategory = (category) => {
     });
 };
 
-exports.updateReviewById = (review_id) => {
+exports.updateReviewById = (review_id, votes) => {
   return db
     .query(
       `UPDATE reviews 
-      SET votes = votes + 1 
+      SET votes = votes + $2
       WHERE reviews.review_id =$1 RETURNING *;`,
-      [review_id]
+      [review_id, votes]
     )
     .then(() => {
       return db.query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id]);
