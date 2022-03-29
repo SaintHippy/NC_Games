@@ -139,16 +139,33 @@ describe("PATCH /api/reviews/:review_id", () => {
   test("STATUS 200. updates votes by 1", () => {
     return request(app)
       .patch(`/api/reviews/1`)
+      .send({ votes: 1 })
       .expect(200)
       .then((response) => {
         const review = response.body.review;
         expect(review).toEqual(
           expect.objectContaining({
-            votes: expect.any(Number),
+            votes: 2,
           })
         );
       });
   });
+
+  test("STATUS 200. updates votes by -1", () => {
+    return request(app)
+      .patch(`/api/reviews/1`)
+      .send({ votes: -1 })
+      .expect(200)
+      .then((response) => {
+        const review = response.body.review;
+        expect(review).toEqual(
+          expect.objectContaining({
+            votes: 0,
+          })
+        );
+      });
+  });
+
   test("STATUS 404 returns on invalid input", () => {
     const review_id = 123446655;
     return request(app)
@@ -159,6 +176,7 @@ describe("PATCH /api/reviews/:review_id", () => {
         expect(msg).toBe("review not found");
       });
   });
+
   test("STATUS 400 returns on bad input", () => {
     const review_id = "hammock";
     return request(app)

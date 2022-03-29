@@ -92,21 +92,19 @@ exports.selectReviewsByCategory = (category) => {
     });
 };
 
-exports.updateReviewById = (review_id, votes) => {
+exports.updateReviewById = (review_id, inc_votes) => {
+  if (inc_votes && isNaN(inc_votes)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid request, inc_votes must be a number",
+    });
+  }
   return db
-    .query(
-      `UPDATE reviews 
-      SET votes = votes + $2
-      WHERE reviews.review_id =$1 RETURNING *;`,
-      [review_id, votes]
-    )
+    .query(`UPDATE reviews SET votes = votes + $2 WHERE review_id = $1`, [review_id, inc_votes])
     .then(() => {
       return db.query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id]);
     })
-    .then((review) => {
-      if (!review.rows[0]) {
-        return Promise.reject({ status: 404, msg: `review: ${review_id} not found` });
-      }
-      return review.rows[0];
+    .then((response) => {
+      return response.rows[0];
     });
 };
